@@ -1,5 +1,5 @@
 from defs.interface import menu, titulo
-from defs.arquivo import arquivo_existe, ler_arquivo, criar_arquivo, novo_cadastro
+from defs.arquivo import arquivo_existe, ler_arquivo, criar_arquivo, novo_cadastro, criar_cadastro
 
 arq = 'cadastro_veiculos.txt'
 if not arquivo_existe(arq):
@@ -17,6 +17,9 @@ while True:
         ano = int(input('Ano: '))
         placa = input('Placa: ').upper()
         f_placa = placa[-1]
-        novo_cadastro(arq, marca, modelo, ano, placa, f_placa)
+        ve = criar_cadastro(marca, modelo, ano, placa, f_placa)
+        novo_cadastro(arq, ve)
     if resp == 2:
         ler_arquivo(arq)
+    if resp == 3:
+        break

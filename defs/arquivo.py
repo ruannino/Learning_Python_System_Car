@@ -1,3 +1,5 @@
+from defs.interface import titulo
+
 def arquivo_existe(nome):
     """
     -> Verifica se um arquivo existe ou não.
@@ -38,32 +40,69 @@ def ler_arquivo(nome):
     Criado por Ruannino.
     """
     try:
-        a = open(nome, 'rt')
-    except Exception:
-        print(f'\033[31mErro!\033[m não consigo ler o arquivo {nome}!')
-    else:
-        print('VEÍCULOS CADASTRADOS')
-        cont = 1
-        for linha in a:
-            dado = linha.split(';')
-            dado[1] = dado[1].replace('\n', '')
-            print(f'{cont:<2} - {dado[0]:<8}{dado[1]:<15} {dado[3]:>3}')
-            cont += 1
-        print(a.read())
+        with open(nome, 'r') as a:
+            titulo('VEÍCULOS CADASTRADOS')
+            print(f'{"ID":<2} | {"Descrição":<36}')
+            cont = 1
+            for linha in a:
+                linha = linha.strip()
+
+                if linha:
+                    dado_str = linha[1:-1]
+
+                    pares = [item.strip() for item in dado_str.split(",")]
+
+                    dado = {}
+                    for par in pares:
+                        chave, valor = par.split(":")
+                        dado[chave.strip()] = valor.strip()
+
+                    modelo = dado.get("'Modelo'", "N/A")
+                    placa = dado.get("'Placa'", "N/A")
+
+                    modelo = modelo.replace("'", "")
+                    print(f'{cont:<2} | {modelo:<36}'.strip())
+
     finally:
         a.close()
 
 
-def novo_cadastro(arquivo, marca='<desconhecida>', modelo='<desconhecido>', ano=0, placa=0, f_placa='N\A'):
+def novo_cadastro(arquivo, dic):
     try:
         a = open(arquivo, 'at')
-    except:
+    except Exception as e:
         print(f'\033[31mErro!\033[m não consigo abrir o arquivo {arquivo}!')
     else:
         try:
-            a.write(f'{marca};{modelo};{ano};{placa};{f_placa}\n')
+            dic_com_indice = {f'ID': obter_indice(arquivo), **dic}
+            a.write(f'{dic_com_indice}/\n')
         except:
             print(f'\033[31mErro!\033[m não consigo escrever no arquivo {arquivo}!')
         else:
-            print(f'\033[32mRegistro de {modelo} adicionado com sucesso!\033[m')
+            print(f'\033[32mRegistro de veículo adicionado com sucesso!\033[m')
             a.close()
+
+
+def criar_cadastro(marca='<desconhecida>', modelo='<desconhecido>', ano=0, placa=0, f_placa='N/A'):
+
+    veiculo = {
+        'Marca':marca,
+        'Modelo':modelo,
+        'Ano':ano,
+        'Placa':placa,
+        'Final da Placa':f_placa
+    }
+    return veiculo
+
+
+def obter_indice(arquivo):
+    try:
+        with open(arquivo, 'rt') as a:
+            numero_linhas =sum(1 for linha in a)
+    except FileNotFoundError:
+        print('Erro!')
+        return 1
+    except Exception as e:
+        return 1
+    return numero_linhas + 1
+

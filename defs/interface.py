@@ -19,3 +19,6 @@ def menu(lista):
     print(linha())
     op = leia_int('Sua opção: ')
     return op
+
+
+def menu_veicular():
