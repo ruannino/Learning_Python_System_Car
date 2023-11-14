@@ -1,0 +1,3 @@
+fiat;strada;2007;KIJ6701;1
+Wolks;Gol;1999;UIT9983;3
+fiat;siena;2006;OLM2222;2
