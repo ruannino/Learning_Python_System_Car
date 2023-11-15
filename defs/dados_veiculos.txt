@@ -1,0 +1,11 @@
+Veículo 1:
+Marca: Fiat
+Modelo: Strada Fire CE
+Ano: 2007
+Placa: KIT6571
+Final da Placa: 1
+Valor de Compra: 5000.0
+Média de Valores: 22666.666666666668
+Percentual de Desconto: 20.0
+Valor Mínimo de Venda: 18133.333333333336
+

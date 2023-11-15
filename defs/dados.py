@@ -123,7 +123,7 @@ def submenu_veiculo(veiculo):
 
 
 def resumo_veiculo(veiculo):
-    # Implementar a lógica para exibir o resumo de um veículo
+    # Exibir informações básicas do veículo
     print(f"\nResumo do Veículo:")
     print(f"Marca: {veiculo['marca']}")
     print(f"Modelo: {veiculo['modelo']}")
@@ -134,20 +134,39 @@ def resumo_veiculo(veiculo):
     print(f"Percentual de Desconto: {veiculo['percentual_desconto']}%")
     print(f"Valor Mínimo de Venda: R${veiculo['valor_minimo_venda']:.2f}")
 
-    # Exibir informações sobre peças
-    print("\nInformações sobre Peças:")
-    print("Peças Compradas:")
-    for indice, peca_comprada in enumerate(veiculo['pecas']['compradas']):
-        print(f"{indice + 1}. {peca_comprada['quantidade']}x {peca_comprada['descricao']} - "
-              f"R${peca_comprada['valor']:.2f}")
+    # Calcular total de valor gasto nas peças compradas
+    total_valor_pecas_compradas = sum(peca['valor'] for peca in veiculo['pecas']['compradas'])
 
-    print("\nPeças Não Compradas:")
-    for indice, peca_nao_comprada in enumerate(veiculo['pecas']['nao_compradas']):
-        print(f"{indice + 1}. {peca_nao_comprada['quantidade']}x {peca_nao_comprada['descricao']} - "
-              f"R${peca_nao_comprada['valor']:.2f}")
+    print(f"Total de Valor das Peças Compradas: R${total_valor_pecas_compradas:.2f}")
 
-    if not veiculo['pecas']['compradas'] and not veiculo['pecas']['nao_compradas']:
-        print("Nenhuma peça cadastrada para este veículo.")
+    # Calcular total de valor das peças não compradas
+    total_valor_pecas_nao_compradas = sum(peca['valor'] for peca in veiculo['pecas']['nao_compradas'])
+
+    print(f"Total de Valor das Peças Não Compradas: R${total_valor_pecas_nao_compradas:.2f}")
+
+    # Calcular total de valor gasto (veículo + peças compradas)
+    total_gasto = veiculo['valor_compra'] + total_valor_pecas_compradas
+
+    print(f"Total Gasto: R${total_gasto:.2f}")
+
+    # Calcular total possível de gastos (veículo + peças compradas + peças não compradas)
+    total_possivel = veiculo['valor_minimo_venda'] + total_valor_pecas_compradas + total_valor_pecas_nao_compradas
+
+    print(f"Total Possível de Gastos: R${total_possivel:.2f}")
+
+    # Adicionar opção para acessar o sub-menu
+    print("\nOpções:")
+    print("1. Informações sobre Peças")
+    print("2. Voltar")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == "1":
+        submenu_veiculo(veiculo)
+    elif opcao == "2":
+        print("Retornando ao menu principal.")
+    else:
+        print("Opção inválida. Tente novamente.")
 
 
 def aquisicao_pecas(veiculo):
