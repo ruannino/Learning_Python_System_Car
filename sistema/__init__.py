@@ -23,14 +23,13 @@
 #         ler_arquivo(arq)
 #     if resp == 3:
 #         break
-from defs.dados import carregar_dados, menu_principal
-
-def main():
-    # Carregar dados existentes
-    veiculos = carregar_dados()
-
-    # Chamar o menu principal
-    menu_principal(veiculos)
-
-if __name__ == "__main__":
-    main()
+# from defs.dados import carregar_dados, menu_principal
+#
+# def main():
+#     # Carregar dados existentes
+#     veiculos = carregar_dados()
+#     # Chamar o menu principal
+#     menu_principal(veiculos)
+#
+# if __name__ == "__main__":
+#     main()
