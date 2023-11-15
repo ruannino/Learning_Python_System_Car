@@ -1,0 +1,3 @@
+{'Marca': 'Fiat', 'Modelo': 'Strada Fire ce', 'Ano': 2007, 'Placa': 'KIJP556'}
+{'Marca': 'Fiat', 'Modelo': 'Siena', 'Ano': 2006, 'Placa': 'KTU0669'}/
+{'Marca': 'Fiat', 'Modelo': 'Toro', 'Ano': 2023, 'Placa': 'LMO9003', 'Final da Placa': '3'}/

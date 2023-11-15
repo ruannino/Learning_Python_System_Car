@@ -346,15 +346,9 @@ def carregar_dados():
                 elif linha.strip() == "":
                     # Finalizar veículo e adicioná-lo à lista
                     veiculos.append(veiculo)
-                else:
-                    # Processar linha e adicionar informações ao veículo
-                    chave, valor = map(str.strip, linha.split(":", 1))
-
-                    # Converter valores numéricos
-                    if chave in ('Valor de Compra', 'Média de Valores', 'Percentual de Desconto', 'Valor Mínimo de Venda'):
-                        valor = float(valor)
-
-                    veiculo[chave] = valor
+            if veiculo:
+                # Adicionar o último veículo à lista (se houver)
+                veiculos.append(veiculo)
 
         print(f"Dados carregados com sucesso do arquivo {nome_arquivo}.\n")
         return veiculos
@@ -364,6 +358,7 @@ def carregar_dados():
         with open(nome_arquivo, "w"):
             pass
         salvar_dados(veiculos)
+        return veiculos
 
     except Exception as erro:
         print(f"Erro ao carregar os dados: {erro}\n")
