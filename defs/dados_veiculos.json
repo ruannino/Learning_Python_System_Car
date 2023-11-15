@@ -1,0 +1,23 @@
+[
+    {
+        "marca": "Fiat",
+        "modelo": "Strada Fire CE",
+        "ano": "2007",
+        "placa": "KIT6571",
+        "final_placa": "1",
+        "valor_compra": 5000.0,
+        "media_valores": 23233.333333333332,
+        "percentual_desconto": 15.0,
+        "valor_minimo_venda": 19748.333333333332,
+        "pecas": {
+            "compradas": [
+                {
+                    "quantidade": 1,
+                    "descricao": "Cano de escape",
+                    "valor": 700.0
+                }
+            ],
+            "nao_compradas": []
+        }
+    }
+]

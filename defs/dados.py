@@ -1,28 +1,40 @@
-# Lista global para armazenar os veículos
+import json
 from prettytable import PrettyTable
+from termcolor import colored  # Certifique-se de instalar o pacote usando: pip install termcolor
 veiculos = []
 
-def cadastrar_veiculo(veiculos):
-    # Implementar a lógica para cadastrar um novo veículo
-    marca = input("Digite a marca do veículo: ")
-    modelo = input("Digite o modelo do veículo: ")
-    ano = input("Digite o ano do veículo: ")
-    placa = str(input("Digite a placa do veículo: "))
-    final_placa = placa[-1]
-    valor_compra = float(input("Digite o valor de compra do veículo: "))
+def linha(tam=42):
+    return '-' * tam
 
-    # Coleta da média de valores do veículo
-    valor1 = float(input("Digite o primeiro valor para a média de valores do veículo: "))
-    valor2 = float(input("Digite o segundo valor para a média de valores do veículo: "))
-    valor3 = float(input("Digite o terceiro valor para a média de valores do veículo: "))
+
+def titulo(msg):
+    print(linha())
+    print(f'{msg}'.center(42))
+    print(linha())
+
+
+def cadastrar_veiculo(veiculos):
+    titulo('CADASTRO DE VEÍCULO')
+    # Implementar a lógica para cadastrar um novo veículo
+    marca = input("Marca do veículo: ")
+    modelo = input("Modelo do veículo: ")
+    ano = input("Ano do veículo: ")
+    placa = str(input("Placa do veículo: "))
+    final_placa = placa[-1]
+
+    titulo('VALORES RELACIONADOS')
+    valor_compra = float(input("Valor de compra do veículo: ").replace(',', '.'))
+    valor1 = float(input("Digite o primeiro valor para a média de valores do veículo: ").replace(',', '.'))
+    valor2 = float(input("Digite o segundo valor para a média de valores do veículo: ").replace(',', '.'))
+    valor3 = float(input("Digite o terceiro valor para a média de valores do veículo: ").replace(',', '.'))
     media_valores = (valor1 + valor2 + valor3) / 3
 
     # Coleta do percentual de desconto para o valor mínimo de venda
     percentual_desconto = float(input("Digite o percentual de desconto para o valor mínimo de venda: "))
     valor_minimo_venda = media_valores - (media_valores * percentual_desconto / 100)
 
-    # Criar o dicionário representando o veículo
-    veiculo = {
+    # Criar veículo com as informações coletadas
+    novo_veiculo = {
         'marca': marca,
         'modelo': modelo,
         'ano': ano,
@@ -32,16 +44,13 @@ def cadastrar_veiculo(veiculos):
         'media_valores': media_valores,
         'percentual_desconto': percentual_desconto,
         'valor_minimo_venda': valor_minimo_venda,
-        'pecas': {
-            'compradas': [],
-            'nao_compradas': []
-        }
+        'pecas': {'compradas': [], 'nao_compradas': []}
     }
 
-    # Adicionar o veículo à lista de veículos
-    veiculos.append(veiculo)
+    # Adicionar veículo à lista
+    veiculos.append(novo_veiculo)
 
-    print("Veículo cadastrado com sucesso!\n")
+    print("Veículo cadastrado com sucesso!")
 
 
 def visualizar_veiculos(veiculos):
@@ -53,14 +62,10 @@ def visualizar_veiculos(veiculos):
         print(f"Ano: {veiculo['ano']}")
         print(f"Placa: {veiculo['placa']} - Final: {veiculo['final_placa']}")
         print(f"Valor de Compra: R${veiculo['valor_compra']:.2f}")
-        print(f"Média de Valores: R${veiculo['media_valores']:.2f}")
-        print(f"Percentual de Desconto: {veiculo['percentual_desconto']}%")
-        print(f"Valor Mínimo de Venda: R${veiculo['valor_minimo_venda']:.2f}")
 
     if not veiculos:
         print("Nenhum veículo cadastrado.")
 
-    # Adicionar opção para selecionar um veículo para visualização detalhada
     if veiculos:
         opcao = input("\nDigite o número do veículo para ver detalhes ou pressione Enter para voltar: ")
         if opcao.isdigit() and 1 <= int(opcao) <= len(veiculos):
@@ -68,6 +73,7 @@ def visualizar_veiculos(veiculos):
             visualizar_veiculo(veiculo_selecionado)
         else:
             print("Opção inválida. Voltando ao menu principal.")
+
 
 def visualizar_veiculo(veiculo):
     # Exibir informações básicas do veículo
@@ -81,67 +87,19 @@ def visualizar_veiculo(veiculo):
     print(f"Percentual de Desconto: {veiculo['percentual_desconto']}%")
     print(f"Valor Mínimo de Venda: R${veiculo['valor_minimo_venda']:.2f}")
 
-    # Adicionar opção para acessar o sub-menu
-    print("\nOpções:")
-    print("1. Resumo do Veículo")
-    print("2. Informações sobre Peças")
-    print("3. Voltar")
+    # Criar tabela para resumo do veículo
+    tabela_resumo = PrettyTable(["Atributo", "Valor"])
+    tabela_resumo.add_row(["Marca", veiculo['marca']])
+    tabela_resumo.add_row(["Modelo", veiculo['modelo']])
+    tabela_resumo.add_row(["Ano", veiculo['ano']])
+    tabela_resumo.add_row(["Placa", f"{veiculo['placa']} - Final: {veiculo['final_placa']}"])
+    tabela_resumo.add_row(["Valor de Compra", f"R${veiculo['valor_compra']:.2f}"])
+    tabela_resumo.add_row(["Média de Valores", f"R${veiculo['media_valores']:.2f}"])
+    tabela_resumo.add_row(["Percentual de Desconto", f"{veiculo['percentual_desconto']}%"])
+    tabela_resumo.add_row(["Valor Mínimo de Venda", f"R${veiculo['valor_minimo_venda']:.2f}"])
 
-    opcao = input("Escolha uma opção: ")
-
-    if opcao == "1":
-        resumo_veiculo(veiculo)
-    elif opcao == "2":
-        submenu_veiculo(veiculo)
-    elif opcao == "3":
-        print("Retornando ao menu principal.")
-    else:
-        print("Opção inválida. Tente novamente.")
-
-
-def submenu_veiculo(veiculo):
-    while True:
-        print("\nSub-menu do Veículo:")
-        print("1. Resumo do Veículo")
-        print("2. Aquisição de Peças")
-        print("3. Média de Valores do Veículo")
-        print("4. Voltar")
-
-        opcao = input("Escolha uma opção: ")
-
-        if opcao == "1":
-            resumo_veiculo(veiculo)
-        elif opcao == "2":
-            aquisicao_pecas(veiculo)
-        elif opcao == "3":
-            media_valores_veiculo(veiculo)
-        elif opcao == "4":
-            print("Retornando ao menu de veículo.")
-            break
-        else:
-            print("Opção inválida. Tente novamente.")
-
-
-def resumo_veiculo(veiculo):
-    # Cria uma tabela
-    tabela = PrettyTable()
-
-    # Define os campos da tabela
-    tabela.field_names = ["Atributo", "Valor"]
-
-    # Adiciona as linhas à tabela
-    tabela.add_row(["Marca", veiculo['marca']])
-    tabela.add_row(["Modelo", veiculo['modelo']])
-    tabela.add_row(["Ano", veiculo['ano']])
-    tabela.add_row(["Placa", f"{veiculo['placa']} - Final: {veiculo['final_placa']}"])
-    tabela.add_row(["Valor de Compra", f"R${veiculo['valor_compra']:.2f}"])
-    tabela.add_row(["Média de Valores", f"R${veiculo['media_valores']:.2f}"])
-    tabela.add_row(["Percentual de Desconto", f"{veiculo['percentual_desconto']}%"])
-    tabela.add_row(["Valor Mínimo de Venda", f"R${veiculo['valor_minimo_venda']:.2f}"])
-
-    # Exibe a tabela
     print("\nResumo do Veículo:")
-    print(tabela)
+    print(tabela_resumo)
 
     # Calcular total de valor gasto nas peças compradas
     total_valor_pecas_compradas = sum(peca['valor'] for peca in veiculo['pecas']['compradas'])
@@ -159,6 +117,10 @@ def resumo_veiculo(veiculo):
     total_possivel = veiculo['valor_minimo_venda'] + total_valor_pecas_compradas + total_valor_pecas_nao_compradas
     print(f"Total Possível de Gastos: R${total_possivel:.2f}")
 
+    # Calcular o lucro (valor mínimo de venda - valor gasto)
+    lucro = veiculo['valor_minimo_venda'] - total_gasto
+    print(f"Lucro: R${lucro:.2f}")
+
     # Adicionar opção para acessar o sub-menu
     print("\nOpções:")
     print("1. Informações sobre Peças")
@@ -174,8 +136,55 @@ def resumo_veiculo(veiculo):
         print("Opção inválida. Tente novamente.")
 
 
+def submenu_veiculo(veiculo):
+    while True:
+        print("\nSub-menu do Veículo:")
+        print("1. Resumo do Veículo")
+        print("2. Aquisição de Peças")
+        print("3. Voltar")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            resumo_veiculo(veiculo)
+        elif opcao == "2":
+            aquisicao_pecas(veiculo)
+        elif opcao == "3":
+            print("Retornando ao menu de veículo.")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+
+def resumo_veiculo(veiculo):
+    tabela_resumo = PrettyTable(["Atributo", "Valor"])
+    tabela_resumo.add_row(["Marca", veiculo['marca']])
+    tabela_resumo.add_row(["Modelo", veiculo['modelo']])
+    tabela_resumo.add_row(["Ano", veiculo['ano']])
+    tabela_resumo.add_row(["Placa", f"{veiculo['placa']} - Final: {veiculo['final_placa']}"])
+    tabela_resumo.add_row(["Valor de Compra", f"R${veiculo['valor_compra']:.2f}"])
+    tabela_resumo.add_row(["Média de Valores", f"R${veiculo['media_valores']:.2f}"])
+    tabela_resumo.add_row(["Percentual de Desconto", f"{veiculo['percentual_desconto']}%"])
+    tabela_resumo.add_row(["Valor Mínimo de Venda", f"R${veiculo['valor_minimo_venda']:.2f}"])
+
+    print("\nResumo do Veículo:")
+    print(tabela_resumo)
+
+    print("\nOpções:")
+    print("1. Informações sobre Peças")
+    print("2. Voltar")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == "1":
+        submenu_veiculo(veiculo)
+    elif opcao == "2":
+        print("Retornando ao menu principal.")
+    else:
+        print("Opção inválida. Tente novamente.")
+
+
 def aquisicao_pecas(veiculo):
-    # Implementar a lógica para aquisição de peças
     print("\nAquisição de Peças:")
     print("1. Listar Peças")
     print("2. Excluir Peça")
@@ -198,13 +207,36 @@ def aquisicao_pecas(veiculo):
 
 def listar_pecas(veiculo):
     print("\nListar Peças:")
-    print("Peças Compradas:")
-    for indice, peca_comprada in enumerate(veiculo['pecas']['compradas']):
-        print(f"{indice + 1}. {peca_comprada['quantidade']}x {peca_comprada['descricao']} - R${peca_comprada['valor']:.2f}")
 
-    print("\nPeças Não Compradas:")
+    # Tabela de Peças Compradas (em verde)
+    print(colored("Peças Compradas:", 'green'))
+    tabela_compradas = PrettyTable(["Índice", "Quantidade", "Descrição", "Valor"])
+    for indice, peca_comprada in enumerate(veiculo['pecas']['compradas']):
+        tabela_compradas.add_row([indice + 1, peca_comprada['quantidade'], peca_comprada['descricao'], f"R${peca_comprada['valor']:.2f}"])
+    print(tabela_compradas)
+
+    # Tabela de Peças Não Compradas (em vermelho)
+    print(colored("\nPeças Não Compradas:", 'red'))
+    tabela_nao_compradas = PrettyTable(["Índice", "Quantidade", "Descrição", "Valor"])
     for indice, peca_nao_comprada in enumerate(veiculo['pecas']['nao_compradas']):
-        print(f"{indice + 1}. {peca_nao_comprada['quantidade']}x {peca_nao_comprada['descricao']} - R${peca_nao_comprada['valor']:.2f}")
+        tabela_nao_compradas.add_row([indice + 1, peca_nao_comprada['quantidade'], peca_nao_comprada['descricao'], f"R${peca_nao_comprada['valor']:.2f}"])
+    print(tabela_nao_compradas)
+
+    # Adicionando informações de valores médios, valor total, etc.
+    total_valor_pecas_compradas = sum(peca['valor'] for peca in veiculo['pecas']['compradas'])
+    total_valor_pecas_nao_compradas = sum(peca['valor'] for peca in veiculo['pecas']['nao_compradas'])
+    total_gasto = veiculo['valor_compra'] + total_valor_pecas_compradas
+    total_possivel = veiculo['valor_minimo_venda'] + total_valor_pecas_compradas + total_valor_pecas_nao_compradas
+
+    print(colored(f"\nTotal de Valor das Peças Compradas: R${total_valor_pecas_compradas:.2f}", 'green'))
+    print(colored(f"Total de Valor das Peças Não Compradas: R${total_valor_pecas_nao_compradas:.2f}", 'red'))
+    print(colored(f"Total Gasto: R${total_gasto:.2f}", 'cyan'))  # Cyan para diferenciar do verde
+    print(colored(f"Total Possível de Gastos: R${total_possivel:.2f}", 'yellow'))  # Yellow para diferenciar do verde
+
+    # Calcular o lucro (valor mínimo de venda - valor gasto)
+    lucro = veiculo['valor_minimo_venda'] - total_gasto
+    print(colored(f"Lucro: R${lucro:.2f}", 'magenta'))  # Magenta para diferenciar do verde
+
 
 def excluir_peca(veiculo):
     listar_pecas(veiculo)
@@ -258,7 +290,6 @@ def adicionar_peca_nao_comprada(veiculo):
 
 
 def media_valores_veiculo(veiculo):
-    # Implementar a lógica para média de valores do veículo
     print("\nMédia de Valores do Veículo:")
     print("1. Adicionar Valores")
     print("2. Editar Valores")
@@ -290,103 +321,52 @@ def adicionar_valores(veiculo):
 
 
 def editar_valores(veiculo):
-    veiculo['media_valores'] = 0  # Reinicia a média para recalcular
-    veiculo['valor_minimo_venda'] = 0  # Reinicia o valor mínimo de venda para recalcular
+    veiculo['media_valores'] = 0
+    veiculo['valor_minimo_venda'] = 0
 
-    adicionar_valores(veiculo)  # Reutiliza a função de adição de valores
+    adicionar_valores(veiculo)
 
     print("Valores editados com sucesso.")
 
 
-import os
-
-
 def salvar_dados(veiculos):
-    # Implementar a lógica para salvar os dados em um arquivo TXT
-    nome_arquivo = "dados_veiculos.txt"
+    nome_arquivo = "dados_veiculos.json"
 
     try:
-        # Verificar se o arquivo já existe
-        arquivo_existe = os.path.isfile(nome_arquivo)
-
-        with open(nome_arquivo, "a" if arquivo_existe else "w") as arquivo:
-            if not arquivo_existe:
-                # Escrever o cabeçalho se o arquivo não existir
-                arquivo.write("Dados dos Veículos\n\n")
-
-            for indice, veiculo in enumerate(veiculos, start=1):
-                arquivo.write(f"Veículo {indice}:\n")
-                arquivo.write(f"Marca: {veiculo['marca']}\n")
-                arquivo.write(f"Modelo: {veiculo['modelo']}\n")
-                arquivo.write(f"Ano: {veiculo['ano']}\n")
-                arquivo.write(f"Placa: {veiculo['placa']}\n")
-                arquivo.write(f"Final da Placa: {veiculo['final_placa']}\n")
-                arquivo.write(f"Valor de Compra: {veiculo['valor_compra']}\n")
-                arquivo.write(f"Média de Valores: {veiculo['media_valores']}\n")
-                arquivo.write(f"Percentual de Desconto: {veiculo['percentual_desconto']}\n")
-                arquivo.write(f"Valor Mínimo de Venda: {veiculo['valor_minimo_venda']}\n")
-                arquivo.write("\n")
-
+        with open(nome_arquivo, "w") as arquivo:
+            json.dump(veiculos, arquivo, indent=4)
         print(f"Dados salvos com sucesso no arquivo {nome_arquivo}.\n")
-
     except Exception as erro:
         print(f"Erro ao salvar os dados: {erro}\n")
 
 
 def carregar_dados():
-    # Implementar a lógica para carregar os dados de um arquivo TXT
     veiculos = []
 
-    nome_arquivo = "dados_veiculos.txt"
+    nome_arquivo = "dados_veiculos.json"
 
     try:
         with open(nome_arquivo, "r") as arquivo:
-            linhas = arquivo.readlines()
-            veiculo = None
-
-            for linha in linhas:
-                if linha.startswith("Veículo"):
-                    # Finalizar veículo anterior e adicionar à lista
-                    if veiculo:
-                        veiculos.append(veiculo)
-                    # Iniciar um novo veículo
-                    veiculo = {'pecas': {'compradas': [], 'nao_compradas': []}}
-                elif linha.strip() == "":
-                    continue  # Ignorar linhas em branco
-                else:
-                    # Processar linha e adicionar informações ao veículo
-                    chave, valor = map(str.strip, linha.split(":", 1))
-
-                    # Converter valores numéricos
-                    if chave in ('Valor de Compra', 'Média de Valores', 'Percentual de Desconto', 'Valor Mínimo de Venda'):
-                        valor = float(valor)
-                    veiculo[chave.lower()] = valor
-
-            # Adicionar o último veículo à lista
-            if veiculo:
-                veiculos.append(veiculo)
-
+            veiculos = json.load(arquivo)
         print(f"Dados carregados com sucesso do arquivo {nome_arquivo}.\n")
-        return veiculos
-
     except FileNotFoundError:
-        # Se o arquivo não existir, cria o arquivo e chama a função novamente
-        with open(nome_arquivo, "w"):
-            pass
+        print("Arquivo não encontrado. Criando um novo arquivo.\n")
         salvar_dados(veiculos)
-
     except Exception as erro:
         print(f"Erro ao carregar os dados: {erro}\n")
-        return []
+
+    return veiculos
+
 
 def menu_principal(veiculos):
     while True:
-        print("\nMenu Principal:")
+        print()
+        titulo('MENU PRINCIPAL')
         print("1 - Cadastrar veículos")
         print("2 - Visualizar veículos cadastrados")
         print("3 - Sair")
 
-        opcao = input("Escolha uma opção (1, 2 ou 3): ")
+        opcao = input("Sua opção: ")
 
         if opcao == "1":
             cadastrar_veiculo(veiculos)
